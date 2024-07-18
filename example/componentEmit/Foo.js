@@ -1,27 +1,29 @@
-import { h } from "../../lib/roger-mini-vue.esm.js"
+import { h } from "../../lib/boris-mini-vue.esm.js";
 
 export const Foo = {
   setup(props, { emit }) {
-
-    const emitAdd =  () => {
-      console.log(' emit add ')
-      emit('add', 1, 2)
-      emit('add-foo')
-    }
+    const emitAdd = () => {
+      console.log(" emit add ");
+      emit("add", 1, 2);
+      emit("add-foo");
+    };
 
     return {
-      emitAdd
-    }
-
+      emitAdd,
+    };
   },
 
   render() {
-    const btn = h('button', {
-      onClick: this.emitAdd
-    }, 'emitAdd')
+    const btn = h(
+      "button",
+      {
+        onClick: this.emitAdd,
+      },
+      "emitAdd"
+    );
 
-    const foo = h('p', {}, 'foo')
+    const foo = h("p", {}, "foo");
 
-    return h("div", {}, [foo, btn])
-  }
-}
+    return h("div", {}, [foo, btn]);
+  },
+};

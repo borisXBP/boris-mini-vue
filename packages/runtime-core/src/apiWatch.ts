@@ -1,33 +1,32 @@
-import { ReactiveEffect } from "@roger-mini-vue/reactivity";
-import { queuePreFlushCb } from './scheduler'
+import { ReactiveEffect } from "@boris-mini-vue/reactivity";
+import { queuePreFlushCb } from "./scheduler";
 
 export function watchEffect(source) {
   function job() {
-    effect.run()
+    effect.run();
   }
-  
 
-  let cleanup
+  let cleanup;
   const onCleanup = function (fn) {
     cleanup = effect.onStop = () => {
-      fn()
-    }
-  }
- 
+      fn();
+    };
+  };
+
   function getter() {
     if (cleanup) {
-      cleanup()
+      cleanup();
     }
-    source(onCleanup)
+    source(onCleanup);
   }
 
   const effect = new ReactiveEffect(getter, () => {
-    queuePreFlushCb(job)
-  })
+    queuePreFlushCb(job);
+  });
 
-  effect.run()
+  effect.run();
 
   return () => {
-    effect.stop()
-  }
+    effect.stop();
+  };
 }

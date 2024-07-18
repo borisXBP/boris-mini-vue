@@ -1,12 +1,12 @@
-import { camelize, toHandlerKey } from "@roger-mini-vue/shared"
+import { camelize, toHandlerKey } from "@boris-mini-vue/shared";
 
 export function emit(instance, event, ...args) {
   // 找到组件的props --->  有没有对应的event  instance.props
-  const { props } = instance
+  const { props } = instance;
 
   // TPP
   // 先去写一个特定的行为  ---》 重构成通用的行为
-  // add 
+  // add
   // add-foo ----> addFoo
   // onAdd 来源于 event  add   ---->  转为首字母大写 Add
   // const handler = props['onAdd']
@@ -25,14 +25,12 @@ export function emit(instance, event, ...args) {
   //   return str.charAt(0).toUpperCase() + str.slice(1)
   // }
 
-
   // // 处理on的行为
   // const toHandlerKey = (str: string) => {
   //   return str ? 'on' + capitalize(str) : ''
   // }
 
-  const handlerName = toHandlerKey(camelize(event))
-  const handler = props[handlerName]
-  handler && handler(...args)
-
+  const handlerName = toHandlerKey(camelize(event));
+  const handler = props[handlerName];
+  handler && handler(...args);
 }

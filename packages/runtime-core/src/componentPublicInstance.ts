@@ -1,15 +1,15 @@
-import { hasOwn } from "@roger-mini-vue/shared"
+import { hasOwn } from "@boris-mini-vue/shared";
 
 const publicPropertiesMap = {
-  $el: i => i.vnode.el,
-  $slots: i => i.slots,
-  $props: i => i.props
-}
+  $el: (i) => i.vnode.el,
+  $slots: (i) => i.slots,
+  $props: (i) => i.props,
+};
 
 export const PublicInstanceProxyHandles = {
-  get({_: instance}, key) {
+  get({ _: instance }, key) {
     // setupState
-    const { setupState, props } = instance
+    const { setupState, props } = instance;
     // if (key in setupState) {
     //   return setupState[key]
     // }
@@ -22,17 +22,16 @@ export const PublicInstanceProxyHandles = {
 
     // 上面的形式一样，实现函数
     if (hasOwn(setupState, key)) {
-      return setupState[key]
+      return setupState[key];
     } else if (hasOwn(props, key)) {
-      return props[key]
+      return props[key];
     }
 
     // key ---> $el
     // if (key === '$el') return instance.vnode.el
-    const publicGetter = publicPropertiesMap[key]
+    const publicGetter = publicPropertiesMap[key];
     if (publicGetter) {
-      return publicGetter(instance)
+      return publicGetter(instance);
     }
-
   },
-}
+};

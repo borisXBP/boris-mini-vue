@@ -1,5 +1,5 @@
 {
-  "name": "roger-mini-vue",
+  "name": "boris-mini-vue",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@roger-mini-vue/compiler-core": "workspace:^1.0.0",
-    "@roger-mini-vue/runtime-dom": "workspace:^1.0.0"
+    "@boris-mini-vue/compiler-core": "workspace:^1.0.0",
+    "@boris-mini-vue/runtime-dom": "workspace:^1.0.0"
   }
 }

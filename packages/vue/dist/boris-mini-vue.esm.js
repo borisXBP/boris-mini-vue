@@ -1,9 +1,5 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
-const Fragment = Symbol('Fragment');
-const Text = Symbol('Text');
+const Fragment = Symbol("Fragment");
+const Text = Symbol("Text");
 function createVNode(type, props, children) {
     const vnode = {
         type,
@@ -12,10 +8,10 @@ function createVNode(type, props, children) {
         component: null,
         shapeFlags: getShapeFlags(type),
         key: props === null || props === void 0 ? void 0 : props.key,
-        el: null
+        el: null,
     };
     // children
-    if (typeof children === 'string') {
+    if (typeof children === "string") {
         vnode.shapeFlags |= 4 /* ShapeFlags.TEXT_CHILDREN */;
     }
     else if (Array.isArray(children)) {
@@ -23,14 +19,16 @@ function createVNode(type, props, children) {
     }
     // slot children  条件 首先是组件类型 + children 必须是object
     if (vnode.shapeFlags & 2 /* ShapeFlags.STATEFUL_COMPONENT */) {
-        if (typeof children === 'object') {
+        if (typeof children === "object") {
             vnode.shapeFlags |= 16 /* ShapeFlags.SLOT_CHILDREN */;
         }
     }
     return vnode;
 }
 function getShapeFlags(type) {
-    return typeof type === 'string' ? 1 /* ShapeFlags.ELEMENT */ : 2 /* ShapeFlags.STATEFUL_COMPONENT */;
+    return typeof type === "string"
+        ? 1 /* ShapeFlags.ELEMENT */
+        : 2 /* ShapeFlags.STATEFUL_COMPONENT */;
 }
 function createTextVNode(text) {
     return createVNode(Text, {}, text);
@@ -204,7 +202,7 @@ function createGetter(isReadonly = false, shallow = false) {
 function createSetter() {
     return function set(target, key, value) {
         const res = Reflect.set(target, key, value);
-        // TODO 触发依赖 
+        // TODO 触发依赖
         trigger(target, key);
         return res;
     };
@@ -213,7 +211,7 @@ const mutableHandlers = {
     // get: createGetter(),
     // set: createSetter()
     get,
-    set
+    set,
 };
 const readonlyHandlers = {
     // get: createGetter(),
@@ -221,7 +219,7 @@ const readonlyHandlers = {
     set(target, key, value) {
         console.warn(`key: ${key} set 失败 因为 target 是 readonly`, target);
         return true;
-    }
+    },
 };
 const shallowReadonlyHandlers = extend({}, readonlyHandlers, {
     get: shallowReadonlyGet,
@@ -254,7 +252,7 @@ function isProxy(value) {
 }
 
 // 1 true '1' 等
-// 怎么样知道get set 
+// 怎么样知道get set
 // proxy ---> object  这个值针对的对象
 // {} ---》 通过对象来进行包裹，这个对象就是ref类   这个类里面有value值，就可以有get set   这就是ref为什么有.value的程序设计
 class RefImpl {
@@ -312,12 +310,12 @@ function proxyRefs(objectWithRefs) {
         set(target, key, value) {
             // set ---> ref ---> .value
             if (isRef(target[key]) && !isRef(value)) {
-                return target[key].value = value;
+                return (target[key].value = value);
             }
             else {
                 return Reflect.set(target, key, value);
             }
-        }
+        },
     });
 }
 
@@ -326,7 +324,7 @@ function emit(instance, event, ...args) {
     const { props } = instance;
     // TPP
     // 先去写一个特定的行为  ---》 重构成通用的行为
-    // add 
+    // add
     // add-foo ----> addFoo
     // onAdd 来源于 event  add   ---->  转为首字母大写 Add
     // const handler = props['onAdd']
@@ -356,9 +354,9 @@ function initProps(instance, rawProps) {
 }
 
 const publicPropertiesMap = {
-    $el: i => i.vnode.el,
-    $slots: i => i.slots,
-    $props: i => i.props
+    $el: (i) => i.vnode.el,
+    $slots: (i) => i.slots,
+    $props: (i) => i.props,
 };
 const PublicInstanceProxyHandles = {
     get({ _: instance }, key) {
@@ -425,7 +423,7 @@ function createComponentInstance(vnode, parent) {
         parent,
         isMounted: false,
         subTree: {},
-        emit: () => { }
+        emit: () => { },
     };
     component.emit = emit.bind(null, component);
     return component;
@@ -450,7 +448,7 @@ function setupStatefulComponent(instance) {
         setCurrentInstance(instance);
         // return function | object    如果返回的是function就可以认为是组件的render函数，如果返回的object,把对象注入到组件的上下文中
         const setupResult = setup(shallowReadonly(instance.props), {
-            emit: instance.emit
+            emit: instance.emit,
         });
         // currentInstance = null
         setCurrentInstance(null);
@@ -460,7 +458,7 @@ function setupStatefulComponent(instance) {
 function handleSetupResult(instance, setupResult) {
     //  function Object
     // TODO function
-    if (typeof setupResult === 'object') {
+    if (typeof setupResult === "object") {
         instance.setupState = proxyRefs(setupResult);
     }
     finishComponentSetup(instance);
@@ -580,7 +578,7 @@ function flushPreFlusCbs() {
 
 function createRenderer(options) {
     // 重新命名，以便后续出问题好查找对应的问题
-    const { createElement: hostCreateElement, patchProp: hostPatchProp, insert: hostInsert, remove: hostRemove, setElementText: hostSetElementText } = options;
+    const { createElement: hostCreateElement, patchProp: hostPatchProp, insert: hostInsert, remove: hostRemove, setElementText: hostSetElementText, } = options;
     function render(n2, container) {
         // TODO 判读n1, n2 是不是一个element  是 就走element 逻辑 如何区分是element 还是 component
         // patch 后面的递归处理
@@ -630,9 +628,9 @@ function createRenderer(options) {
         }
     }
     function patchElement(n1, n2, container, parentComponent, anchor) {
-        console.log('patchElement');
-        console.log('n1', n1);
-        console.log('n2', n2);
+        console.log("patchElement");
+        console.log("n1", n1);
+        console.log("n2", n2);
         // 对比 props 和 chilren
         const oldProps = n1.props || EMPTY_OBJ;
         const newProps = n2.props || EMPTY_OBJ;
@@ -657,7 +655,7 @@ function createRenderer(options) {
         }
         else {
             if (prevShapeFlag & 4 /* ShapeFlags.TEXT_CHILDREN */) {
-                hostSetElementText(container, '');
+                hostSetElementText(container, "");
                 mountChildren(c2, container, parentComponent, anchor);
             }
             else {
@@ -761,7 +759,9 @@ function createRenderer(options) {
                     patched++;
                 }
             }
-            const increasingNewIndexSequence = moved ? getSequence(newIndexToOldIndexMap) : [];
+            const increasingNewIndexSequence = moved
+                ? getSequence(newIndexToOldIndexMap)
+                : [];
             let j = increasingNewIndexSequence.length - 1;
             for (let i = toBePatched - 1; i >= 0; i--) {
                 const nextIndex = i + s2;
@@ -772,7 +772,7 @@ function createRenderer(options) {
                 }
                 else if (moved) {
                     if (j < 0 || i !== increasingNewIndexSequence[j]) {
-                        console.log('移动位置');
+                        console.log("移动位置");
                         hostInsert(nextChild.el, container, anchor);
                     }
                     else {
@@ -824,7 +824,7 @@ function createRenderer(options) {
             // 具体的click ---> 重构成通用状态
             // on + Event name
             // 例如 onMousedown
-            // const isOn = (key: string) => /^on[A-Z]/.test(key) 
+            // const isOn = (key: string) => /^on[A-Z]/.test(key)
             // if (isOn(key)) {
             //   const event = key.slice(2).toLowerCase()
             //   el.addEventListener(event, val)
@@ -868,7 +868,7 @@ function createRenderer(options) {
     }
     function setupRenderEffect(instance, initialVNode, container, anchor) {
         instance.update = effect(() => {
-            console.log('update');
+            console.log("update");
             // 这里有一个初始化的操作和更新操作
             if (!instance.isMounted) {
                 // init
@@ -897,13 +897,13 @@ function createRenderer(options) {
             }
         }, {
             scheduler() {
-                console.log('update --- scheduler');
+                console.log("update --- scheduler");
                 queueJobs(instance.update);
-            }
+            },
         });
     }
     return {
-        createApp: createAppAPI(render)
+        createApp: createAppAPI(render),
     };
 }
 function updateComponentPreRender(instance, nextVNode) {
@@ -986,7 +986,11 @@ function setElementText(el, text) {
     el.textContent = text;
 }
 const renderer = createRenderer({
-    createElement, patchProp, insert, remove, setElementText
+    createElement,
+    patchProp,
+    insert,
+    remove,
+    setElementText,
 });
 function createApp(...args) {
     return renderer.createApp(...args);
@@ -1038,20 +1042,20 @@ function generate(ast) {
     // // code += 'export '
     // push('export ')
     genFunctionPreamble(ast, context);
-    const functionName = 'render';
-    const args = ['_ctx', '_cache', '$props', '$setup', '$data', '$options'];
-    const signature = args.join(', ');
+    const functionName = "render";
+    const args = ["_ctx", "_cache", "$props", "$setup", "$data", "$options"];
+    const signature = args.join(", ");
     // code += `function ${functionName}(${signature}){`
     // code += 'return '
     push(`function ${functionName}(${signature}){`);
-    push('return ');
+    push("return ");
     genNode(ast.codegenNode, context);
-    // code += `return '${node.content}'` 
+    // code += `return '${node.content}'`
     // const node = ast.codegenNode
     // code += '}'
-    push('}');
+    push("}");
     return {
-        code: context.code
+        code: context.code,
     };
 }
 function genNode(node, context) {
@@ -1081,7 +1085,7 @@ function genInterpolation(node, context) {
     const { push, helper } = context;
     push(`${helper(TO_DISPLAY_STRING)}(`);
     genNode(node.content, context);
-    push(')');
+    push(")");
 }
 function genExpression(node, context) {
     const { push } = context;
@@ -1102,7 +1106,7 @@ function genElement(node, context) {
     //   const child = children[i];
     //   genNode(child, context)
     // }
-    push(')');
+    push(")");
 }
 function genCompoundExpression(node, context) {
     const { push } = context;
@@ -1118,7 +1122,7 @@ function genCompoundExpression(node, context) {
     }
 }
 function genNullable(args) {
-    return args.map(arg => arg || 'null');
+    return args.map((arg) => arg || "null");
 }
 function genNodeList(nodes, context) {
     const { push } = context;
@@ -1131,33 +1135,33 @@ function genNodeList(nodes, context) {
             genNode(node, context);
         }
         if (i < nodes.length - 1) {
-            push(', ');
+            push(", ");
         }
     }
 }
 function createCodegenContext() {
     const context = {
-        code: '',
+        code: "",
         push(source) {
             context.code += source;
         },
         helper(key) {
             return `_${helperMapName[key]}`;
-        }
+        },
     };
     return context;
 }
 function genFunctionPreamble(ast, context) {
     const { push } = context;
-    const VueBinging = 'Vue';
-    const aliasHelper = s => `${helperMapName[s]}: _${helperMapName[s]}`;
+    const VueBinging = "Vue";
+    const aliasHelper = (s) => `${helperMapName[s]}: _${helperMapName[s]}`;
     if (ast.helpers.length > 0) {
-        push(`const { ${ast.helpers.map(aliasHelper).join(', ')} } = ${VueBinging}`);
+        push(`const { ${ast.helpers.map(aliasHelper).join(", ")} } = ${VueBinging}`);
     }
-    push('\n');
+    push("\n");
     // let code = ''
     // code += 'export '
-    push('return ');
+    push("return ");
 }
 
 function baseParse(content) {
@@ -1433,32 +1437,9 @@ function baseCompiler(template) {
 // mini-vue的出口
 function compilerToFunction(template) {
     const { code } = baseCompiler(template);
-    const render = new Function('Vue', code)(runtimeDom);
+    const render = new Function("Vue", code)(runtimeDom);
     return render;
 }
 registerRuntimeCompiler(compilerToFunction);
 
-exports.ReactiveEffect = ReactiveEffect;
-exports.createApp = createApp;
-exports.createElementVNode = createVNode;
-exports.createRenderer = createRenderer;
-exports.createTextVNode = createTextVNode;
-exports.effect = effect;
-exports.getCurrentInstance = getCurrentInstance;
-exports.h = h;
-exports.inject = inject;
-exports.isProxy = isProxy;
-exports.isReactive = isReactive;
-exports.isReadonly = isReadonly;
-exports.isRef = isRef;
-exports.nextTick = nextTick;
-exports.provide = provide;
-exports.proxyRefs = proxyRefs;
-exports.reactive = reactive;
-exports.readonly = readonly;
-exports.ref = ref;
-exports.registerRuntimeCompiler = registerRuntimeCompiler;
-exports.renderSlots = renderSlots;
-exports.shallowReadonly = shallowReadonly;
-exports.toDisplayString = toDisplayString;
-exports.unRef = unRef;
+export { ReactiveEffect, createApp, createVNode as createElementVNode, createRenderer, createTextVNode, effect, getCurrentInstance, h, inject, isProxy, isReactive, isReadonly, isRef, nextTick, provide, proxyRefs, reactive, readonly, ref, registerRuntimeCompiler, renderSlots, shallowReadonly, toDisplayString, unRef };

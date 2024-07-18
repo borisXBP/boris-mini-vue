@@ -1,61 +1,60 @@
 import { vi } from "vitest";
-import { reactive } from "@roger-mini-vue/reactivity";
-import { nextTick } from '../src/scheduler'
+import { reactive } from "@boris-mini-vue/reactivity";
+import { nextTick } from "../src/scheduler";
 import { watchEffect } from "../src/apiWatch";
 
-describe('api: watch', () => {
-
-  it('effect', async () => {
-    const state = reactive({ count: 0 })
-    let dummy
+describe("api: watch", () => {
+  it("effect", async () => {
+    const state = reactive({ count: 0 });
+    let dummy;
     watchEffect(() => {
-      dummy = state.count
-    })
+      dummy = state.count;
+    });
 
-    expect(dummy).toBe(0)
+    expect(dummy).toBe(0);
 
-    state.count++
-    await nextTick()
+    state.count++;
+    await nextTick();
 
-    expect(dummy).toBe(1)
-  })
+    expect(dummy).toBe(1);
+  });
 
-  it('stopping the watcher (effect)', async () => {
-    const state = reactive({ count: 0 })
-    let dummy
+  it("stopping the watcher (effect)", async () => {
+    const state = reactive({ count: 0 });
+    let dummy;
     const stop: any = watchEffect(() => {
-      dummy = state.count
-    })
+      dummy = state.count;
+    });
 
-    expect(dummy).toBe(0)
+    expect(dummy).toBe(0);
 
-    stop()
-    state.count++
+    stop();
+    state.count++;
 
-    await nextTick()
+    await nextTick();
 
     // should not update
-    expect(dummy).toBe(0)
-  })
+    expect(dummy).toBe(0);
+  });
 
-  it('cleanup registration (effect)', async () => {
-    const state = reactive({ count: 0 })
-    const cleanup = vi.fn()
-    let dummy
+  it("cleanup registration (effect)", async () => {
+    const state = reactive({ count: 0 });
+    const cleanup = vi.fn();
+    let dummy;
 
     const stop: any = watchEffect((onCleanup) => {
-      onCleanup(cleanup)
-      dummy = state.count
-    })
+      onCleanup(cleanup);
+      dummy = state.count;
+    });
 
-    expect(dummy).toBe(0)
+    expect(dummy).toBe(0);
 
-    state.count++
-    await nextTick()
-    expect(cleanup).toHaveBeenCalledTimes(1)
-    expect(dummy).toBe(1)
+    state.count++;
+    await nextTick();
+    expect(cleanup).toHaveBeenCalledTimes(1);
+    expect(dummy).toBe(1);
 
-    stop()
-    expect(cleanup).toHaveBeenCalledTimes(2)
-  })
-})
+    stop();
+    expect(cleanup).toHaveBeenCalledTimes(2);
+  });
+});

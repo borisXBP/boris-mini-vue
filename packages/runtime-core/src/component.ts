@@ -1,9 +1,9 @@
-import { proxyRefs } from "@roger-mini-vue/reactivity"
-import { shallowReadonly } from "@roger-mini-vue/reactivity"
-import { emit } from "./componentEmit"
-import { initProps } from "./componentProps"
-import { PublicInstanceProxyHandles } from "./componentPublicInstance"
-import { initSlots } from "./componentSlots"
+import { proxyRefs } from "@boris-mini-vue/reactivity";
+import { shallowReadonly } from "@boris-mini-vue/reactivity";
+import { emit } from "./componentEmit";
+import { initProps } from "./componentProps";
+import { PublicInstanceProxyHandles } from "./componentPublicInstance";
+import { initSlots } from "./componentSlots";
 
 export function createComponentInstance(vnode, parent) {
   const component = {
@@ -17,83 +17,83 @@ export function createComponentInstance(vnode, parent) {
     parent,
     isMounted: false,
     subTree: {},
-    emit: () => {}
-  }
+    emit: () => {},
+  };
 
-  component.emit = emit.bind(null, component) as any
+  component.emit = emit.bind(null, component) as any;
 
-  return component
+  return component;
 }
 
 export function setupComponent(instance) {
   // TODO
   // initProps
-  initProps(instance, instance.vnode.props)
+  initProps(instance, instance.vnode.props);
   // initSlots
-  initSlots(instance, instance.vnode.children)
+  initSlots(instance, instance.vnode.children);
   // 初始化一个有状态的component
-  setupStatefulComponent(instance)
+  setupStatefulComponent(instance);
 }
 
 function setupStatefulComponent(instance) {
-  const Component = instance.type
- 
-  // ctx
-  instance.proxy = new Proxy({_: instance}, PublicInstanceProxyHandles)
+  const Component = instance.type;
 
-  const { setup } = Component
+  // ctx
+  instance.proxy = new Proxy({ _: instance }, PublicInstanceProxyHandles);
+
+  const { setup } = Component;
 
   if (setup) {
     // 每个组件对应的自己的实例对象 调用setup的时候赋值
     // currentInstance = instance  优化为函数的赋值方式
-    setCurrentInstance(instance)
+    setCurrentInstance(instance);
     // return function | object    如果返回的是function就可以认为是组件的render函数，如果返回的object,把对象注入到组件的上下文中
     const setupResult = setup(shallowReadonly(instance.props), {
-      emit: instance.emit
-    })
+      emit: instance.emit,
+    });
 
     // currentInstance = null
-    setCurrentInstance(null)
+    setCurrentInstance(null);
 
-    handleSetupResult(instance, setupResult)
+    handleSetupResult(instance, setupResult);
   }
 }
 
 function handleSetupResult(instance, setupResult) {
   //  function Object
   // TODO function
-  if (typeof setupResult === 'object') {
-    instance.setupState = proxyRefs(setupResult)
+  if (typeof setupResult === "object") {
+    instance.setupState = proxyRefs(setupResult);
   }
 
-  finishComponentSetup(instance)
+  finishComponentSetup(instance);
 }
 
 function finishComponentSetup(instance) {
-  const Component = instance.type
+  const Component = instance.type;
 
   if (compiler && !Component.render) {
     if (Component.template) {
-      Component.render = compiler(Component.template)
+      Component.render = compiler(Component.template);
     }
   }
 
-  instance.render = Component.render
+  instance.render = Component.render;
 }
 
-let currentInstance = null
+let currentInstance = null;
 
 // 此方法vue3文档不在公开，自己学习一下
 export function getCurrentInstance() {
-  return currentInstance
+  return currentInstance;
 }
 
 export function setCurrentInstance(instance) {
   // 好处：全局跟踪的时候，在这里打断点即可
-  currentInstance = instance
+  currentInstance = instance;
 }
 
-let compiler
+let compiler;
 export function registerRuntimeCompiler(_compiler) {
-  compiler = _compiler
+  compiler = _compiler;
 }

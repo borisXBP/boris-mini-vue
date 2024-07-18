@@ -1,5 +1,9 @@
-import { isObject } from "@roger-mini-vue/shared"
-import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from "./baseHandlers"
+import { isObject } from "@boris-mini-vue/shared";
+import {
+  mutableHandlers,
+  readonlyHandlers,
+  shallowReadonlyHandlers,
+} from "./baseHandlers";
 // import { track, trigger } from "./effect"
 
 // 利用高阶函数判断是否是readonly
@@ -16,7 +20,7 @@ import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from "./ba
 // function createSetter() {
 //   return function set(target, key, value) {
 //     const res = Reflect.set(target, key, value)
-//     // TODO 触发依赖 
+//     // TODO 触发依赖
 //     trigger(target, key)
 //     return res
 //   }
@@ -33,7 +37,7 @@ import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from "./ba
 
 // function set(target, key, value) {
 //   const res = Reflect.set(target, key, value)
-//   // TODO 触发依赖 
+//   // TODO 触发依赖
 //   trigger(target, key)
 //   return res
 // }
@@ -55,38 +59,38 @@ import { mutableHandlers, readonlyHandlers, shallowReadonlyHandlers } from "./ba
 // }
 
 export const enum ReactiveFlags {
-  IS_REACTIVE = '__v_isReactive',
-  IS_READONLY = '__v_isReadonly'
+  IS_REACTIVE = "__v_isReactive",
+  IS_READONLY = "__v_isReadonly",
 }
 
 function createActiveObject(raw, baseHandlers) {
   if (!isObject(raw)) {
-    console.warn(`raw ${raw} 必须是一个对象`)
-    return raw
+    console.warn(`raw ${raw} 必须是一个对象`);
+    return raw;
   }
-  return new Proxy(raw, baseHandlers)
+  return new Proxy(raw, baseHandlers);
 }
 
 export function reactive(raw) {
-  return createActiveObject(raw, mutableHandlers)
+  return createActiveObject(raw, mutableHandlers);
 }
 
 export function readonly(raw) {
-  return createActiveObject(raw, readonlyHandlers)
+  return createActiveObject(raw, readonlyHandlers);
 }
 
 export function shallowReadonly(raw) {
-  return createActiveObject(raw, shallowReadonlyHandlers)
+  return createActiveObject(raw, shallowReadonlyHandlers);
 }
 
 export function isReactive(value) {
-  return !!value[ReactiveFlags.IS_REACTIVE]
+  return !!value[ReactiveFlags.IS_REACTIVE];
 }
 
 export function isReadonly(value) {
-  return !!value[ReactiveFlags.IS_READONLY]
+  return !!value[ReactiveFlags.IS_READONLY];
 }
 
 export function isProxy(value) {
-  return isReactive(value) || isReadonly(value)
+  return isReactive(value) || isReadonly(value);
 }

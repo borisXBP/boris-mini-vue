@@ -1,9 +1,11 @@
-import { h } from '../../dist/roger-mini-vue.esm.js'
+import { h } from "../../dist/boris-mini-vue.esm.js";
 
 export default {
-  name: 'Child',
+  name: "Child",
   setup() {},
   render() {
-    return h('div', {}, [h('div', {}, 'child - props - msg:' + this.$props.msg)])
-  }
-}
+    return h("div", {}, [
+      h("div", {}, "child - props - msg:" + this.$props.msg),
+    ]);
+  },
+};

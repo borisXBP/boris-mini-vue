@@ -1,23 +1,25 @@
-import { h, ref } from '../../lib/roger-mini-vue.esm.js'
+import { h, ref } from "../../lib/boris-mini-vue.esm.js";
 
-const nextChildren = 'newChildren'
-const prevChildren = 'oldChildren'
+const nextChildren = "newChildren";
+const prevChildren = "oldChildren";
 
 // 老的 array 新的 Text
 export default {
-  name: 'TextToText',
+  name: "TextToText",
   setup() {
-    const isChange = ref(false)
-    window.isChange = isChange
+    const isChange = ref(false);
+    window.isChange = isChange;
 
     return {
-      isChange
-    }
+      isChange,
+    };
   },
 
   render() {
-    const self = this
+    const self = this;
 
-    return self.isChange ? h('div', {}, nextChildren) : h('div', {}, prevChildren)
-  }
-}
+    return self.isChange
+      ? h("div", {}, nextChildren)
+      : h("div", {}, prevChildren);
+  },
+};

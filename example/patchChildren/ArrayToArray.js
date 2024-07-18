@@ -1,6 +1,4 @@
-
-
-import { h, ref } from '../../lib/roger-mini-vue.esm.js' 
+import { h, ref } from "../../lib/boris-mini-vue.esm.js";
 
 // 1. 左侧的对比
 // (a b) c
@@ -154,7 +152,6 @@ import { h, ref } from '../../lib/roger-mini-vue.esm.js'
 //   h('p', { key: 'G' }, 'G'),
 // ]
 
-
 // 移动 节点存在于新的和老的里面 但是位置变了
 // a b (c d e) f g
 // a b (e c d) f g
@@ -230,34 +227,35 @@ import { h, ref } from '../../lib/roger-mini-vue.esm.js'
 
 // fix 无key的情况 c 节点是移动的，而不是删除之后重新创建的
 const prevChildren = [
-  h('p', { key: 'A' }, 'A'),
-  h('p', { }, 'C'),
-  h('p', { key: 'B' }, 'B'),
-  h('p', { key: 'D' }, 'D'),
-]
+  h("p", { key: "A" }, "A"),
+  h("p", {}, "C"),
+  h("p", { key: "B" }, "B"),
+  h("p", { key: "D" }, "D"),
+];
 
 const nextChildren = [
-  h('p', { key: 'A' }, 'A'),
-  h('p', { key: 'B' }, 'B'),
-  h('p', { }, 'C'),
-  h('p', { key: 'D' }, 'D'),
-]
-
+  h("p", { key: "A" }, "A"),
+  h("p", { key: "B" }, "B"),
+  h("p", {}, "C"),
+  h("p", { key: "D" }, "D"),
+];
 
 export default {
-  name: 'ArrayToArray',
+  name: "ArrayToArray",
   setup() {
-    const isChange = ref(false)
-    window.isChange = isChange
+    const isChange = ref(false);
+    window.isChange = isChange;
 
     return {
-      isChange
-    }
+      isChange,
+    };
   },
 
   render() {
-    const self = this
+    const self = this;
 
-    return self.isChange ? h('div', {}, nextChildren) : h('div', {}, prevChildren)
-  }
-}
+    return self.isChange
+      ? h("div", {}, nextChildren)
+      : h("div", {}, prevChildren);
+  },
+};

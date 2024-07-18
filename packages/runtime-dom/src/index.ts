@@ -1,45 +1,49 @@
-import { createRenderer } from '@roger-mini-vue/runtime-core'
-export * from '@roger-mini-vue/runtime-core'
+import { createRenderer } from "@boris-mini-vue/runtime-core";
+export * from "@boris-mini-vue/runtime-core";
 
 function createElement(type) {
-  return document.createElement(type)
+  return document.createElement(type);
 }
 
 function patchProp(el, key, prevVal, nextVal) {
-  const isOn = (key: string) => /^on[A-Z]/.test(key) 
+  const isOn = (key: string) => /^on[A-Z]/.test(key);
   if (isOn(key)) {
-    const event = key.slice(2).toLowerCase()
-    el.addEventListener(event, nextVal)
+    const event = key.slice(2).toLowerCase();
+    el.addEventListener(event, nextVal);
   } else {
     if (nextVal === undefined || nextVal === null) {
-      el.removeAttribute(key)
+      el.removeAttribute(key);
     } else {
-      el.setAttribute(key, nextVal)
+      el.setAttribute(key, nextVal);
     }
   }
 }
 
 function insert(child, parent, anchor) {
   // parent.append(el)
-  parent.insertBefore(child, anchor || null)
+  parent.insertBefore(child, anchor || null);
 }
 
 function remove(child) {
-  const parent = child.parentNode
+  const parent = child.parentNode;
 
   if (parent) {
-    parent.removeChild(child)
+    parent.removeChild(child);
   }
 }
 
 function setElementText(el, text) {
-  el.textContent = text
+  el.textContent = text;
 }
 
 const renderer: any = createRenderer({
-  createElement, patchProp, insert, remove, setElementText
-})
+  createElement,
+  patchProp,
+  insert,
+  remove,
+  setElementText,
+});
 
 export function createApp(...args) {
-  return renderer.createApp(...args)
+  return renderer.createApp(...args);
 }

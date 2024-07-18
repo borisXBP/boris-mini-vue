@@ -1,4 +1,4 @@
-import { ShapeFlags } from "@roger-mini-vue/shared"
+import { ShapeFlags } from "@boris-mini-vue/shared";
 
 export function initSlots(instance, children) {
   // 简单的只针对一个虚拟节点的标签
@@ -9,9 +9,9 @@ export function initSlots(instance, children) {
 
   // 如果是一个object
 
-  const { shapeFlags } = instance.vnode
+  const { shapeFlags } = instance.vnode;
   if (shapeFlags & ShapeFlags.SLOT_CHILDREN) {
-    normalizeObjectSlots(children, instance.slots)
+    normalizeObjectSlots(children, instance.slots);
   }
 
   // const slots = {}
@@ -24,11 +24,11 @@ export function initSlots(instance, children) {
 
 function normalizeObjectSlots(children, slots) {
   for (const key in children) {
-    const value = children[key]
-    slots[key] = (props) => normalizeSlotValue(value(props))
+    const value = children[key];
+    slots[key] = (props) => normalizeSlotValue(value(props));
   }
 }
 
 function normalizeSlotValue(value) {
-    return Array.isArray(value) ? value : [value]
+  return Array.isArray(value) ? value : [value];
 }
